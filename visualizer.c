@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "complex.h"
 #include "visualizer.h"
+#include "write_movie.h"
 #include <SDL2/SDL.h>
 #define DEBUG 0
 
@@ -52,7 +52,7 @@ void render_window(SDL_Renderer *renderer, Complex_plane *plane)
     printf("done \n");
 }
 
-int main(int argc, char *argv[])
+int runlive(int argc, char *argv[])
 {
     double center_x = 0.0;
     double center_y = 0.0;
@@ -122,4 +122,10 @@ int main(int argc, char *argv[])
     }
 
     return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    runlive(argc, argv);
+    // write_image("filetest", NULL, 1280, 780);
 }

@@ -10,3 +10,4 @@ struct Complex_plane
 typedef struct Complex_plane Complex_plane;
 void render_window(SDL_Renderer *renderer, Complex_plane *plane);
 void window_pos_to_plane_pos(Complex_plane *plane, int x, int y, double *result_x, double *result_y);
+int runlive(int argc, char *argv[]);
