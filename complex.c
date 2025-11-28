@@ -130,6 +130,7 @@ void compute_n_terms(Complex_sequence *u, int n)
 int is_bounded_v1(Complex_sequence *u, int precision)
 {
 
+    // printf("begin is_bounded\n");
     for (int i = 0; i < precision; i++)
     {
         compute_next_term(u);
@@ -148,15 +149,17 @@ int is_bounded_v1(Complex_sequence *u, int precision)
         }
     }
 
-    free_complex_sequence(u);
-
     Complex current_term;
-
+    // printf("end is_bounded\n");
     current_term = compute_next_term(u);
+    //
     if (get_modulus(&current_term) > ball_radius || isfinite(get_modulus(&current_term)))
     {
+        free_complex_sequence(u);
+
         return 0;
     }
+    free_complex_sequence(u);
 
     return 1;
 }

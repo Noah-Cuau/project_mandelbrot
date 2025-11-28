@@ -4,8 +4,8 @@ LIBS = -lm
 
 ALL : visualizer 
 
-visualizer : visualizer.o complex.o write_movie.o
-	$(CC) $(LIBS_SDL2) visualizer.o complex.o write_movie.o -o visualizer $(LIBS)
+visualizer : visualizer.o complex.o write_movie.o matrix.o
+	$(CC) $(LIBS_SDL2) visualizer.o complex.o write_movie.o matrix.o -o visualizer $(LIBS)
 	find -name '*.o' |xargs rm
 
 
@@ -18,6 +18,10 @@ visualizer.o : visualizer.c
 
 complex.o : complex.c
 	$(CC) -c complex.c $(LIBS)
+
+matrix.o : matrix.c
+	$(CC) -c matrix.c $(LIBS)
+
 
 
 
