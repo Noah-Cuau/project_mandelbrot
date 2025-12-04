@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <math.h>
 #include "complex.h"
+#include <limits.h>
 
 void debug_complex(void)
 {
     Complex a = {1.062, 0.92};
     Complex b = {2.0, -1.0};
 
-    Complex_sequence *test = create_complex_sequence(&a, 2);
-
-    printf("is bounded : %d\n", is_bounded_v1(test, 10));
+    Complex_sequence *test = create_complex_sequence(&b, 2);
+    is_bounded_v2(test, 30, 4);
 
     printf("So far so good\n");
 }
@@ -127,13 +127,18 @@ void compute_n_terms(Complex_sequence *u, int n)
     }
 }
 
-int is_bounded_v1(Complex_sequence *u, int precision)
+int is_bounded_v1(Complex_sequence *u, int precision, int max_val)
 {
 
     // printf("begin is_bounded\n");
+    int treshold_inf = 0;
     for (int i = 0; i < precision; i++)
     {
         compute_next_term(u);
+        if (isfinite(get_modulus(get_last_term(u))) || treshold_inf != 0)
+        {
+            treshold_inf = i;
+        }
     }
 
     double ball_radius = 0.0;
@@ -153,15 +158,58 @@ int is_bounded_v1(Complex_sequence *u, int precision)
     // printf("end is_bounded\n");
     current_term = compute_next_term(u);
     //
-    if (get_modulus(&current_term) > ball_radius || isfinite(get_modulus(&current_term)))
+    double radius = get_modulus(&current_term);
+    if (get_modulus(&current_term) < ball_radius || isfinite(radius))
     {
         free_complex_sequence(u);
-
-        return 0;
+        return max_val;
     }
     free_complex_sequence(u);
 
-    return 1;
+    // printf("%f\n", radius);
+    return 0;
+}
+
+int is_bounded_v2(Complex_sequence *u, int precision, int max_val)
+{
+    int inf_treshold = -1;
+    for (int i = 0; i < precision; i++)
+    {
+
+        // print_complex(get_last_term(u), 0);
+        compute_next_term(u);
+        if (inf_treshold == -1)
+        {
+            if (isnan(get_im(get_last_term(u))) || isnan(get_re(get_last_term(u))))
+            {
+                inf_treshold = i;
+            }
+        }
+    }
+    double modulus = 0.0;
+    double ball_radius = 0.0;
+    for (int i = 0; i < precision; i++)
+    {
+        modulus = get_modulus(get_term(u, i));
+
+        if (modulus > ball_radius)
+        {
+
+            ball_radius = modulus;
+        }
+    }
+
+    Complex last_term = compute_next_term(u);
+    if (get_modulus(&last_term) < ball_radius && inf_treshold == -1)
+    {
+        free_complex_sequence(u);
+        return 0;
+    }
+    else
+    {
+        free_complex_sequence(u);
+        return 1 + (inf_treshold * max_val) / precision;
+    }
 }
 void print_complex(Complex *z, int modulus)
 {

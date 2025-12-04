@@ -33,7 +33,9 @@ Complex compute_next_term(Complex_sequence *u);
 Complex *get_term(Complex_sequence *u, int i);
 Complex *get_last_term(Complex_sequence *u);
 void compute_n_terms(Complex_sequence *u, int n);
-int is_bounded_v1(Complex_sequence *u, int precision);
+int is_bounded_v1(Complex_sequence *u, int precision, int max_val);
+int is_bounded_v2(Complex_sequence *u, int precision, int max_val);
+
 void print_sequence(Complex_sequence *u, int modulus);
 
 void debug_complex(void);
